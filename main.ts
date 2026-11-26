@@ -43,6 +43,9 @@ function main(): void {
   if (ENTRY !== ENTRY.trim()) {
     throw new Error("entry has leading/trailing whitespace");
   }
+  if (ENTRY.trim().length === 0) {
+    throw new Error("entry must not be only whitespace");
+  }
   if (![...ENTRY].every((c) => c.codePointAt(0)! >= 32)) {
     throw new Error("entry has control characters");
   }
@@ -60,6 +63,9 @@ function main(): void {
   const back: string = readFileSync(path, "utf-8");
   if (back !== ENTRY) {
     throw new Error("read-back mismatch");
+  }
+  if (back.endsWith("\n")) {
+    throw new Error("written entry must not end with a newline");
   }
   console.log(`wrote ${ENTRY.length} chars to ${path}`);
 }
